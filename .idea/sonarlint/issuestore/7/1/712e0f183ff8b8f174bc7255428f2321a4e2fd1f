@@ -1,0 +1,21 @@
+
+Bsquid:S1989:"&Add a "try/catch" block for "forward".(™Ô¨°øÿÿÿÿ
+?squid:S1148V"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+=squid:S19895"&Add a "try/catch" block for "forward".(¢ÉŸÂ
+ksquid:S2095K"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ÉÚ»Åüÿÿÿÿ
+[squid:S2147W"DCombine this catch with the one at line 85, which has the same body.(ıàÑÎ
+[squid:S2147/"DCombine this catch with the one at line 45, which has the same body.(É®£
+Csquid:S1989"'Add a "try/catch" block for "parseInt".(Ò¯„Ôşÿÿÿÿ
+8squid:S1643"Use a StringBuilder instead.(çô°¹üÿÿÿÿ
+?squid:S11480"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+Osquid:S1197"8Move the array designator from the variable to the type.(÷•‡·
+?squid:S1148."#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+Esquid:S2115H")Add password protection to this database.(áÁ–ùÿÿÿÿ
+Qsquid:S1161":Add the "@Override" annotation above this method signature(çØß
+Bsquid:S1989:"&Add a "try/catch" block for "forward".(™Ô¨°øÿÿÿÿ
+1squid:S1220""Move this file to a named package.
+=squid:S1989'"&Add a "try/catch" block for "forward".(¢ÉŸÂ
+=squid:S19895"&Add a "try/catch" block for "forward".(¢ÉŸÂ
+?squid:S1148X"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+dsquid:S2095H"HUse try-with-resources or close this "Connection" in a "finally" clause.(áÁ–ùÿÿÿÿ
+=squid:S1989'"&Add a "try/catch" block for "forward".(¢ÉŸÂ
