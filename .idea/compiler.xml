@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="UF2-NEW" />
+        <module name="M8UF3iUF4" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="UF2-NEW" target="1.5" />
+      <module name="M8UF3iUF4" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -2,10 +2,10 @@
   <artifact type="exploded-war" name="UF2-NEW:war exploded">
     <output-path>$PROJECT_DIR$/out/artifacts/UF2_NEW_war_exploded</output-path>
     <root id="root">
-      <element id="javaee-facet-resources" facet="UF2-NEW/web/Web" />
+      <element id="javaee-facet-resources" facet="M8UF3iUF4/web/Web" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="UF2-NEW" />
+          <element id="module-output" name="M8UF3iUF4" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Spring-4.3.18.RELEASE2" />

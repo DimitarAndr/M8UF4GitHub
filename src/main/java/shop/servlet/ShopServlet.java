@@ -1,32 +1,40 @@
+package shop.servlet;
+
+import registerUser.tienda.RegisterServlet;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Properties;
 
 @WebServlet("/shopServlet")
 public class ShopServlet extends HttpServlet {
 
+
+    @Override
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response) throws ServletException, IOException {
 
 
         String productos[] = request.getParameterValues("checkBox");
-
-
         String paymentMethod = request.getParameter("paymentMethod");
         String nameClient = request.getParameter("nameClient");
         String comment = request.getParameter("comment");
         String quantity = request.getParameter("quantity");
 
-        int amount = productos.length*(Integer.parseInt(quantity)*2);
-        String listProductos="";
-        for(String product : productos){
-            listProductos+=product+",";
+        int amount = productos.length * (Integer.parseInt(quantity) * 2);
+        String listProductos = "";
+        for (String product : productos) {
+            listProductos += product + ",";
         }
-       listProductos=listProductos.substring(0, listProductos.length() - 1);
+        listProductos = listProductos.substring(0, listProductos.length() - 1);
 
         boolean success = false;
         Object data = null;
@@ -51,8 +59,8 @@ public class ShopServlet extends HttpServlet {
                 data = "No existe usuario con este Nick";
                 request.setAttribute("data", data);
                 request.getRequestDispatcher("rejected.jsp").forward(request, response);
-            }else{
-                writeInDDBB(listProductos,nameClient,paymentMethod,comment,quantity,amount);
+            } else {
+                writeInDDBB(listProductos, nameClient, paymentMethod, comment, quantity, amount);
                 data = "You will receive your product soon";
                 request.setAttribute("data", data);
                 request.getRequestDispatcher("ShopSuccess.jsp").forward(request, response);
@@ -61,15 +69,20 @@ public class ShopServlet extends HttpServlet {
         }
     }
 
-    private void writeInDDBB(String listProductos,String nameClient, String paymentMethod, String comment, String quantity,int amount) {
+    private void writeInDDBB(String listProductos, String nameClient, String paymentMethod, String comment, String quantity, int amount) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
 
-            String url1 = "jdbc:mysql://localhost:3306/Tienda";
 
-            Connection conn = null;
+            Connection conn;
 
-            conn = DriverManager.getConnection(url1, "root", "");
+            String url = "jdbc:mysql://localhost:3306/Tienda";
+            Properties props = new Properties();
+            props.setProperty("user", "root");
+            props.setProperty("password", "");
+            conn=  DriverManager.getConnection(url, props);
+
+
 
             String sqlQueryInsert = "insert into compras(Nick,Products,Payment,Quantity,Amount,Comments)" + " values(?,?,?,?,?,?)";
             PreparedStatement preparedStmt1 = conn.prepareStatement(sqlQueryInsert);

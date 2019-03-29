@@ -1,3 +1,5 @@
+package registerUser.tienda;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -5,10 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.*;
+import java.util.Properties;
 
 @WebServlet("/RegisterServlet")
 public class RegisterServlet extends HttpServlet {
 
+    @Override
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response) throws ServletException, IOException {
 
@@ -58,8 +62,8 @@ public class RegisterServlet extends HttpServlet {
                     request.setAttribute("data", data);
                     request.getRequestDispatcher("success.jsp").forward(request, response);
                 }
-            }else{
-                data="Este usuario existe, elige otro";
+            } else {
+                data = "Este usuario existe, elige otro";
                 request.setAttribute("data", data);
                 request.getRequestDispatcher("success.jsp").forward(request, response);
             }
@@ -75,42 +79,50 @@ public class RegisterServlet extends HttpServlet {
         return checkUserNameDB(username);
     }
 
-    static boolean checkUserNameDB(String username) throws ClassNotFoundException, SQLException {
+    public static boolean checkUserNameDB(String username) throws ClassNotFoundException, SQLException {
+
         boolean existUser = false;
-
         Class.forName("com.mysql.jdbc.Driver");
+        Connection conn;
+        String url = "jdbc:mysql://localhost:3306/Tienda";
+        Properties props = new Properties();
+        props.setProperty("user", "root");
+        props.setProperty("password", "");
+        conn=  DriverManager.getConnection(url, props);
+        try {
+            existUser = false;
 
-        String url1 = "jdbc:mysql://localhost:3306/Tienda";
+            String sqlQuery = "select count(username) from Usuario where username ='" + username + "'";
+            Statement st = conn.createStatement();
 
-        Connection conn = null;
+            ResultSet rs = st.executeQuery(sqlQuery);
 
-        conn = DriverManager.getConnection(url1, "root", "");
+            int numberOfRows = 0;
+            while (rs.next()) {
+                numberOfRows = rs.getInt(1);
+            }
+            if (numberOfRows != 0) {
+                existUser = true;
+            }
 
-        String sqlQuery = "select count(username) from Usuario where username ='" + username + "'";
-        Statement st = conn.createStatement();
 
-        ResultSet rs = st.executeQuery(sqlQuery);
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
 
-        int numberOfRows=0;
-        while (rs.next()) {
-             numberOfRows = rs.getInt(1);
+            conn.close();
         }
-        if (numberOfRows != 0) {
-            existUser = true;
-        }
-        conn.close();
+
         return existUser;
     }
 
 
     public void writeInDDBB(String username, String mail, String password) throws SQLException {
-        boolean existUser = false;
+        Connection conn = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
 
             String url1 = "jdbc:mysql://localhost:3306/Tienda";
-
-            Connection conn = null;
 
             conn = DriverManager.getConnection(url1, "root", "");
 
@@ -121,11 +133,12 @@ public class RegisterServlet extends HttpServlet {
             preparedStmt1.setString(3, password);
             preparedStmt1.execute();
 
-            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        } finally {
+            conn.close();
         }
 
     }
