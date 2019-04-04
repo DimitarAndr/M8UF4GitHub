@@ -16,7 +16,7 @@
       </facet>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_5">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_9">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -30,7 +30,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="Tomcat 9.0.14" level="application_server_libraries" />
-    <orderEntry type="library" name="Spring-4.3.18.RELEASE2" level="project" />
     <orderEntry type="library" exported="" name="mysql-connector-java-5.1.46" level="project" />
   </component>
 </module>

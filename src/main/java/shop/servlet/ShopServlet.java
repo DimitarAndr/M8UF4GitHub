@@ -1,6 +1,6 @@
 package shop.servlet;
 
-import registerUser.tienda.RegisterServlet;
+import com.registeruser.RegisterServlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
