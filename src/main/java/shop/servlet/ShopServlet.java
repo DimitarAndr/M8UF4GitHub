@@ -13,79 +13,76 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 @WebServlet("/shopServlet")
 public class ShopServlet extends HttpServlet {
 
+    private static final String ERROR = "Error ";
 
     @Override
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response) throws ServletException, IOException {
 
 
-        String productos[] = request.getParameterValues("checkBox");
+        String[] productos = request.getParameterValues("checkBox");
         String paymentMethod = request.getParameter("paymentMethod");
         String nameClient = request.getParameter("nameClient");
         String comment = request.getParameter("comment");
         String quantity = request.getParameter("quantity");
 
         int amount = productos.length * (Integer.parseInt(quantity) * 2);
-        String listProductos = "";
+        StringBuilder bld = new StringBuilder();
+
         for (String product : productos) {
-            listProductos += product + ",";
+            bld.append(product+",");
         }
+        String listProductos = bld.toString();
         listProductos = listProductos.substring(0, listProductos.length() - 1);
 
-        boolean success = false;
         Object data = null;
 
         if (nameClient.matches("[A-Za-z0-9]{1,10}")) {
-            success = true;
-        } else {
-            data = "Erroe en el Nick";
-            request.setAttribute("data", data);
-            request.getRequestDispatcher("rejected.jsp").forward(request, response);
-        }
-        if (success) {
             boolean existUser = false;
             try {
                 existUser = checkExistUserInDB(nameClient);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (SQLException e) {
-                e.printStackTrace();
+            } catch (ClassNotFoundException | SQLException e) {
+                Logger.getLogger(ERROR +e);
             }
             if (!existUser) {
                 data = "No existe usuario con este Nick";
                 request.setAttribute("data", data);
                 request.getRequestDispatcher("rejected.jsp").forward(request, response);
             } else {
-                writeInDDBB(listProductos, nameClient, paymentMethod, comment, quantity, amount);
+                try {
+                    writeInDDBB(listProductos, nameClient, paymentMethod, comment, quantity, amount);
+                } catch (ClassNotFoundException e) {
+                    Logger.getLogger(ERROR +e);
+                }
                 data = "You will receive your product soon";
                 request.setAttribute("data", data);
                 request.getRequestDispatcher("ShopSuccess.jsp").forward(request, response);
             }
 
+        } else {
+            data = "Erroe en el Nick";
+            request.setAttribute("data", data);
+            request.getRequestDispatcher("rejected.jsp").forward(request, response);
         }
     }
 
-    private void writeInDDBB(String listProductos, String nameClient, String paymentMethod, String comment, String quantity, int amount) {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
+    private boolean checkExistUserInDB(String nameClient) throws SQLException, ClassNotFoundException {
+        return RegisterServlet.checkUserNameDB(nameClient);
+    }
 
-
-            Connection conn;
-
-            String url = "jdbc:mysql://localhost:3306/Tienda";
-            Properties props = new Properties();
-            props.setProperty("user", "root");
-            props.setProperty("password", "");
-            conn=  DriverManager.getConnection(url, props);
-
-
-
-            String sqlQueryInsert = "insert into compras(Nick,Products,Payment,Quantity,Amount,Comments)" + " values(?,?,?,?,?,?)";
-            PreparedStatement preparedStmt1 = conn.prepareStatement(sqlQueryInsert);
+    private boolean writeInDDBB(String listProductos, String nameClient, String paymentMethod, String comment, String quantity, int amount) throws ClassNotFoundException {
+        Class.forName("com.mysql.jdbc.Driver");
+        String url = "jdbc:mysql://localhost:3306/Tienda";
+        Properties props = new Properties();
+        props.setProperty("user", "root");
+        props.setProperty("password", "");
+        String sqlQueryInsert = "insert into compras(Nick,Products,Payment,Quantity,Amount,Comments)" + " values(?,?,?,?,?,?)";
+        try (Connection conn = DriverManager.getConnection(url, props); PreparedStatement preparedStmt1 = conn.prepareStatement(sqlQueryInsert)) {
             preparedStmt1.setString(1, nameClient);
             preparedStmt1.setString(2, listProductos);
             preparedStmt1.setString(3, paymentMethod);
@@ -93,17 +90,13 @@ public class ShopServlet extends HttpServlet {
             preparedStmt1.setInt(5, amount);
             preparedStmt1.setString(6, comment);
             preparedStmt1.execute();
-            conn.close();
-
+            return true;
         } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            Logger.getLogger(ERROR+e);
         }
-    }
 
-    private boolean checkExistUserInDB(String nameClient) throws ClassNotFoundException, SQLException {
-        return RegisterServlet.checkUserNameDB(nameClient);
+        return false;
     }
 }
+
 
