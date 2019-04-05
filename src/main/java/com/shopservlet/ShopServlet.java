@@ -1,6 +1,7 @@
-package shop.servlet;
+package com.shopservlet;
 
 import com.registeruser.RegisterServlet;
+import utils.constants.Constants;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,7 +19,6 @@ import java.util.logging.Logger;
 @WebServlet("/shopServlet")
 public class ShopServlet extends HttpServlet {
 
-    private static final String ERROR = "Error ";
 
     @Override
     protected void doPost(HttpServletRequest request,
@@ -47,7 +47,7 @@ public class ShopServlet extends HttpServlet {
             try {
                 existUser = checkExistUserInDB(nameClient);
             } catch (ClassNotFoundException | SQLException e) {
-                Logger.getLogger(ERROR +e);
+                Logger.getLogger(Constants.ERRORBD + e);
             }
             if (!existUser) {
                 data = "No existe usuario con este Nick";
@@ -57,7 +57,7 @@ public class ShopServlet extends HttpServlet {
                 try {
                     writeInDDBB(listProductos, nameClient, paymentMethod, comment, quantity, amount);
                 } catch (ClassNotFoundException e) {
-                    Logger.getLogger(ERROR +e);
+                    Logger.getLogger(Constants.ERRORBD + e);
                 }
                 data = "You will receive your product soon";
                 request.setAttribute("data", data);
@@ -71,12 +71,11 @@ public class ShopServlet extends HttpServlet {
         }
     }
 
-    private boolean checkExistUserInDB(String nameClient) throws SQLException, ClassNotFoundException {
+    private boolean checkExistUserInDB(String nameClient) throws SQLException, ClassNotFoundException, IOException {
         return RegisterServlet.checkUserNameDB(nameClient);
     }
 
     private boolean writeInDDBB(String listProductos, String nameClient, String paymentMethod, String comment, String quantity, int amount) throws ClassNotFoundException {
-        Class.forName("com.mysql.jdbc.Driver");
         String url = "jdbc:mysql://localhost:3306/Tienda";
         Properties props = new Properties();
         props.setProperty("user", "root");
@@ -92,7 +91,7 @@ public class ShopServlet extends HttpServlet {
             preparedStmt1.execute();
             return true;
         } catch (SQLException e) {
-            Logger.getLogger(ERROR+e);
+            Logger.getLogger(Constants.ERRORBD + e);
         }
 
         return false;

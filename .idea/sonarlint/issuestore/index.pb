@@ -25,5 +25,9 @@ C
 PropertiesSystem,e\7\e7c8321192163e354cf4bf00e7a9e4835af2df30
 [
 +src/main/java/shop/servlet/ShopServlet.java,a\2\a2dd28906508b3433b2d8d78fa485f7ad9f46f46
-f
-6src/main/java/registerUser/tienda/RegisterServlet.java,6\3\6314dca2f8009efd6387736c87564caca58f62df
+X
+(.idea/artifacts/UF2_NEW_war_exploded.xml,7\0\7010b376d7e1be268f0b0cea733e13c24022d354
+=
+M8UF3iUF4.iml,7\1\71a1b567ca3860a22ae277b1246a2082c3174617
+c
+3src/main/java/com/registeruser/RegisterServlet.java,1\3\13991c78b83a8e6cca7262801afb17158405a282

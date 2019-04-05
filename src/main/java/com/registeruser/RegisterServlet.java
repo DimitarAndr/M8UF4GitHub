@@ -1,12 +1,12 @@
 package com.registeruser;
 
-
+import utils.constants.Constants;
+import utils.propertiestienda.PropertiesTienda;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
@@ -33,11 +33,13 @@ public class RegisterServlet extends HttpServlet {
         if (usernameValid && mailValid && passwordValid) {
             boolean existUser = false;
 
-
             existUser = checkUserNameDB(username);
-
             if (!existUser) {
-                writeInDDBB(username, mail, password, request, response);
+                try {
+                    writeInDDBB(username, mail, password, request, response);
+                }catch (Exception e){
+                    Logger.getLogger(Constants.ERRORBD + e);
+                }
             } else {
                 data = "Este usuario existe, elige otro";
                 request.setAttribute("data", data);
@@ -57,6 +59,58 @@ public class RegisterServlet extends HttpServlet {
             request.setAttribute("data", data);
             request.getRequestDispatcher("rejected.jsp").forward(request, response);
         }
+
+    }
+
+    public static boolean checkUserNameDB(String username) throws IOException {
+        boolean existUser = false;
+        /*Properties props = new Properties();
+        props.setProperty("user", "root");
+        props.setProperty("pass", "");*/
+        String url = "jdbc:mysql://localhost:3306/Tienda";
+        Properties props=PropertiesTienda.getPropertiesDDBB();
+        String sqlQuery = "select count(username) from Usuario where username = ?";
+        try (Connection conn = DriverManager.getConnection(url,props);
+             PreparedStatement preparedStatement = conn.prepareStatement(sqlQuery);
+             ResultSet rs = preparedStatement.executeQuery(sqlQuery)) {
+
+            preparedStatement.setString(1, username);
+            int numberOfRows = 0;
+            while (rs.next()) {
+                numberOfRows = rs.getInt(1);
+            }
+            if (numberOfRows != 0) {
+                existUser = true;
+            }
+
+        } catch (Exception e) {
+            Logger.getLogger("Error" + e);
+        }
+        return existUser;
+    }
+
+    public void writeInDDBB(String username, String mail, String password, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        String data;
+        Properties props = new Properties();
+        String url = "jdbc:mysql://localhost:3306/Tienda";
+        props.setProperty("user", "root");
+        props.setProperty("pass", "");
+        String sqlQueryInsert = "insert into Usuario(username,mail,password)" + " values(?,?,?)";
+        try (Connection conn = DriverManager.getConnection(url, props); PreparedStatement preparedStmt1 = conn.prepareStatement(sqlQueryInsert)) {
+            preparedStmt1.setString(1, username);
+            preparedStmt1.setString(2, mail);
+            preparedStmt1.setString(3, password);
+            preparedStmt1.execute();
+
+            data = "Success! Nuevo usuario: " + username;
+            request.setAttribute("data", data);
+            request.getRequestDispatcher("success.jsp").forward(request, response);
+
+        } catch (SQLException e) {
+            Logger.getLogger(Constants.ERRORBD + e);
+        }
+
     }
 
     private boolean checkValidPassword(String password) {
@@ -69,74 +123,5 @@ public class RegisterServlet extends HttpServlet {
 
     private boolean checkValidUsername(String username) {
         return (username.matches("[A-Za-z0-9]{1,10}"));
-    }
-
-    public static boolean checkUserNameDB(String username) {
-        boolean existUser = false;
-        Properties props = new Properties();
-        String url = "jdbc:mysql://localhost:3306/Tienda";
-        props.setProperty("user", "root");
-        props.setProperty("pass", "");
-        try (Connection conn = DriverManager.getConnection(url, props)) {
-            String sqlQuery = "select count(username) from Usuario where username ='" + username + "'";
-            PreparedStatement st = (PreparedStatement) conn.createStatement();
-
-            existUser = existUsername(existUser, sqlQuery, st);
-        } catch (Exception e) {
-            Logger.getLogger("Error" + e);
-        }
-        return existUser;
-    }
-
-    private static boolean existUsername(boolean existUser, String sqlQuery, PreparedStatement st) {
-        try (ResultSet rs = st.executeQuery(sqlQuery)) {
-
-            int numberOfRows = 0;
-            while (rs.next()) {
-                numberOfRows = rs.getInt(1);
-            }
-            if (numberOfRows != 0) {
-                existUser = true;
-            }
-        } catch (Exception ex) {
-            Logger.getLogger("Exception " + ex);
-        }
-        return existUser;
-    }
-
-
-    public void writeInDDBB(String username, String mail, String password, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        String data;
-        Properties props = new Properties();
-        String url = "jdbc:mysql://localhost:3306/Tienda";
-        props.setProperty("user", "root");
-        props.setProperty("pass", "");
-        try (Connection conn = DriverManager.getConnection(url, props)) {
-
-            String sqlQueryInsert = "insert into Usuario(username,mail,password)" + " values(?,?,?)";
-            insertUsuario(username, mail, password, conn, sqlQueryInsert);
-
-        } catch (SQLException e) {
-            Logger.getLogger("Error " + e);
-
-        } finally {
-
-            data = "Success! Nuevo usuario: " + username;
-            request.setAttribute("data", data);
-            request.getRequestDispatcher("success.jsp").forward(request, response);
-        }
-
-    }
-
-    private void insertUsuario(String username, String mail, String password, Connection conn, String sqlQueryInsert) {
-        try (PreparedStatement preparedStmt1 = conn.prepareStatement(sqlQueryInsert)) {
-            preparedStmt1.setString(1, username);
-            preparedStmt1.setString(2, mail);
-            preparedStmt1.setString(3, password);
-            preparedStmt1.execute();
-        } catch (Exception ignore) {
-            Logger.getLogger("Error" + ignore);
-        }
     }
 }

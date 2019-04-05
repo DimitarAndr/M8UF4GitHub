@@ -1,0 +1,8 @@
+
+Xsquid:UnusedPrivateMethod/",Remove this unused private "allInfo" method.(öŸ‚8ä¶¤À-
+[
+squid:S106>"9Replace this use of System.out or System.err by a logger.(ĞÃ€Óşÿÿÿÿ8ä¶¤À-
+Fsquid:S1148C"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ8ä¶¤À-
+Msquid:S20936"*Change this "try" to a try-with-resources.(¡»¢üùÿÿÿÿ8ä¶¤À-
+Osquid:S1068",Remove this unused "nameBBDD" private field.(¯£Ûÿÿÿÿÿ8ä¶¤À-
+zsquid:S1488T"\Immediately return this expression instead of assigning it to the temporary variable "info".(÷ì”Ã8ä¶¤À-

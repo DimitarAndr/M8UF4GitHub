@@ -1,4 +1,8 @@
-driver jdbc:mysql://localhost:3306/Tienda
-db tienda
-user root
-pass parola
+#URL Servidor
+servidor.url = jdbc:mysql://localhost:3306/Tienda
+# Nombre del servidor
+servidor.nombre=localhost
+# Usuario para la conexión
+servidor.usuario=root
+# Password para la conexión
+servidor.password=
