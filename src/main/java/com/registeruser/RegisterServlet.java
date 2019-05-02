@@ -2,12 +2,15 @@ package com.registeruser;
 
 import utils.constants.Constants;
 import utils.propertiestienda.PropertiesTienda;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -19,7 +22,7 @@ public class RegisterServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response) throws ServletException, IOException {
 
-
+        Properties prop = PropertiesTienda.getPropertiesDDBB();
         String username = request.getParameter("username");
         String mail = request.getParameter("mail");
         String password = request.getParameter("password");
@@ -30,14 +33,20 @@ public class RegisterServlet extends HttpServlet {
         boolean mailValid = checkValidMail(mail);
         boolean passwordValid = checkValidPassword(password);
 
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
         if (usernameValid && mailValid && passwordValid) {
             boolean existUser = false;
 
-            existUser = checkUserNameDB(username);
+            existUser = checkUserNameDB(username,prop);
             if (!existUser) {
                 try {
                     writeInDDBB(username, mail, password, request, response);
-                }catch (Exception e){
+                } catch (Exception e) {
                     Logger.getLogger(Constants.ERRORBD + e);
                 }
             } else {
@@ -62,19 +71,16 @@ public class RegisterServlet extends HttpServlet {
 
     }
 
-    public static boolean checkUserNameDB(String username) throws IOException {
+    public static boolean checkUserNameDB(String user,Properties prop) throws IOException {
         boolean existUser = false;
-        /*Properties props = new Properties();
-        props.setProperty("user", "root");
-        props.setProperty("pass", "");*/
-        String url = "jdbc:mysql://localhost:3306/Tienda";
-        Properties props=PropertiesTienda.getPropertiesDDBB();
-        String sqlQuery = "select count(username) from Usuario where username = ?";
-        try (Connection conn = DriverManager.getConnection(url,props);
-             PreparedStatement preparedStatement = conn.prepareStatement(sqlQuery);
-             ResultSet rs = preparedStatement.executeQuery(sqlQuery)) {
 
-            preparedStatement.setString(1, username);
+        String sqlQuery ="select count(username) from Usuario where username = ?";
+
+        try (Connection conn = DriverManager.getConnection(prop.getProperty("servidor.url"), prop.getProperty("servidor.usuario"),
+                prop.getProperty("servidor.password")); PreparedStatement preparedStatement = conn.prepareStatement(sqlQuery)) {
+            preparedStatement.setString(1, user);
+            ResultSet rs = preparedStatement.executeQuery();
+
             int numberOfRows = 0;
             while (rs.next()) {
                 numberOfRows = rs.getInt(1);
@@ -124,4 +130,18 @@ public class RegisterServlet extends HttpServlet {
     private boolean checkValidUsername(String username) {
         return (username.matches("[A-Za-z0-9]{1,10}"));
     }
+
+  /*  public static Properties getProperties() {
+        Properties prop = new Properties();
+        InputStream is = null;
+        String[] properties = null;
+        try {
+            is = new FileInputStream("/run/media/dimitar/7AC2-65E0/DAW2/M8/UF2-NEW/configuracion.properties");
+            prop.load(is);
+        } catch (IOException e) {
+            System.out.println(e.toString());
+        }
+
+        return prop;
+    }*/
 }
