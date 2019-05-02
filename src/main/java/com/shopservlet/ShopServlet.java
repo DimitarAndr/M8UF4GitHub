@@ -2,6 +2,7 @@ package com.shopservlet;
 
 import com.registeruser.RegisterServlet;
 import utils.constants.Constants;
+import utils.propertiestienda.PropertiesTienda;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,18 +25,22 @@ public class ShopServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response) throws ServletException, IOException {
 
-
+        Properties prop = PropertiesTienda.getPropertiesDDBB();
         String[] productos = request.getParameterValues("checkBox");
         String paymentMethod = request.getParameter("paymentMethod");
         String nameClient = request.getParameter("nameClient");
         String comment = request.getParameter("comment");
         String quantity = request.getParameter("quantity");
 
+
+        RegisterServlet.addClassForName();
+
+
         int amount = productos.length * (Integer.parseInt(quantity) * 2);
         StringBuilder bld = new StringBuilder();
 
         for (String product : productos) {
-            bld.append(product+",");
+            bld.append(product + ",");
         }
         String listProductos = bld.toString();
         listProductos = listProductos.substring(0, listProductos.length() - 1);
@@ -45,8 +50,8 @@ public class ShopServlet extends HttpServlet {
         if (nameClient.matches("[A-Za-z0-9]{1,10}")) {
             boolean existUser = false;
             try {
-                existUser = checkExistUserInDB(nameClient);
-            } catch (ClassNotFoundException | SQLException e) {
+                existUser = checkExistUserInDB(nameClient, prop);
+            } catch (Exception e) {
                 Logger.getLogger(Constants.ERRORBD + e);
             }
             if (!existUser) {
@@ -71,8 +76,8 @@ public class ShopServlet extends HttpServlet {
         }
     }
 
-    private boolean checkExistUserInDB(String nameClient) throws SQLException, ClassNotFoundException, IOException {
-        return RegisterServlet.checkUserNameDB(nameClient);
+    private boolean checkExistUserInDB(String nameClient, Properties prop) throws IOException {
+        return RegisterServlet.checkUserNameDB(nameClient, prop);
     }
 
     private boolean writeInDDBB(String listProductos, String nameClient, String paymentMethod, String comment, String quantity, int amount) throws ClassNotFoundException {
@@ -80,7 +85,7 @@ public class ShopServlet extends HttpServlet {
         Properties props = new Properties();
         props.setProperty("user", "root");
         props.setProperty("password", "");
-        String sqlQueryInsert = "insert into compras(Nick,Products,Payment,Quantity,Amount,Comments)" + " values(?,?,?,?,?,?)";
+        String sqlQueryInsert = "insert into Compras(Nick,Products,Payment,Quantity,Amount,Comments)" + " values(?,?,?,?,?,?)";
         try (Connection conn = DriverManager.getConnection(url, props); PreparedStatement preparedStmt1 = conn.prepareStatement(sqlQueryInsert)) {
             preparedStmt1.setString(1, nameClient);
             preparedStmt1.setString(2, listProductos);
