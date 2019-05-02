@@ -2,7 +2,6 @@ package com.registeruser;
 
 import utils.constants.Constants;
 import utils.propertiestienda.PropertiesTienda;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,11 +30,7 @@ public class RegisterServlet extends HttpServlet {
         boolean mailValid = checkValidMail(mail);
         boolean passwordValid = checkValidPassword(password);
 
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        addClassForName();
 
         if (usernameValid && mailValid && passwordValid) {
             boolean existUser = false;
@@ -68,6 +63,7 @@ public class RegisterServlet extends HttpServlet {
         }
 
     }
+
 
     public static boolean checkUserNameDB(String user, Properties prop) throws IOException {
         boolean existUser = false;
@@ -129,4 +125,13 @@ public class RegisterServlet extends HttpServlet {
     private boolean checkValidUsername(String username) {
         return (username.matches("[A-Za-z0-9]{1,10}"));
     }
+
+    public static void addClassForName() {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
