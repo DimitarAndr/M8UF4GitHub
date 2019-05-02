@@ -8,9 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -42,7 +40,7 @@ public class RegisterServlet extends HttpServlet {
         if (usernameValid && mailValid && passwordValid) {
             boolean existUser = false;
 
-            existUser = checkUserNameDB(username,prop);
+            existUser = checkUserNameDB(username, prop);
             if (!existUser) {
                 try {
                     writeInDDBB(username, mail, password, request, response);
@@ -71,22 +69,23 @@ public class RegisterServlet extends HttpServlet {
 
     }
 
-    public static boolean checkUserNameDB(String user,Properties prop) throws IOException {
+    public static boolean checkUserNameDB(String user, Properties prop) throws IOException {
         boolean existUser = false;
 
-        String sqlQuery ="select count(username) from Usuario where username = ?";
+        String sqlQuery = "select count(username) from Usuario where username = ?";
 
         try (Connection conn = DriverManager.getConnection(prop.getProperty("servidor.url"), prop.getProperty("servidor.usuario"),
                 prop.getProperty("servidor.password")); PreparedStatement preparedStatement = conn.prepareStatement(sqlQuery)) {
-            preparedStatement.setString(1, user);
-            ResultSet rs = preparedStatement.executeQuery();
 
-            int numberOfRows = 0;
-            while (rs.next()) {
-                numberOfRows = rs.getInt(1);
-            }
-            if (numberOfRows != 0) {
-                existUser = true;
+            preparedStatement.setString(1, user);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                int numberOfRows = 0;
+                while (rs.next()) {
+                    numberOfRows = rs.getInt(1);
+                }
+                if (numberOfRows != 0) {
+                    existUser = true;
+                }
             }
 
         } catch (Exception e) {
@@ -130,18 +129,4 @@ public class RegisterServlet extends HttpServlet {
     private boolean checkValidUsername(String username) {
         return (username.matches("[A-Za-z0-9]{1,10}"));
     }
-
-  /*  public static Properties getProperties() {
-        Properties prop = new Properties();
-        InputStream is = null;
-        String[] properties = null;
-        try {
-            is = new FileInputStream("/run/media/dimitar/7AC2-65E0/DAW2/M8/UF2-NEW/configuracion.properties");
-            prop.load(is);
-        } catch (IOException e) {
-            System.out.println(e.toString());
-        }
-
-        return prop;
-    }*/
 }
