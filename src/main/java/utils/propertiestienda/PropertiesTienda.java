@@ -1,29 +1,36 @@
 package utils.propertiestienda;
 
-import java.io.*;
-import java.util.*;
+import org.junit.Test;
+import utils.constants.Constants;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.logging.Logger;
 
+import static org.junit.Assert.assertEquals;
+
 public class PropertiesTienda {
-    private PropertiesTienda() {
+
+    public PropertiesTienda() {
     }
-    public static Properties getPropertiesDDBB() throws IOException {
+
+    public static  Properties getPropertiesDDBB() {
         Properties prop = new Properties();
         InputStream is = null;
         try {
-            is = new FileInputStream("E:\\DAW2\\M8\\UF2-NEW\\PropertiesSystem");
+            is = new FileInputStream("E:\\DAW2\\M8\\UF2-NEW\\src\\main\\java\\utils\\propertiestienda\\PropertiesSystem");
             prop.load(is);
-        } catch(IOException e) {
-            Logger.getLogger("Error "+e);
+
+        } catch (IOException e) {
+            Logger.getLogger(e + Constants.ERRORBD);
         }
-
-        Properties props=null;
-        StringBuilder  sb = new StringBuilder();
-        sb.append(prop.getProperty("servidor.usuario")+",");
-        sb.append(prop.getProperty("servidor.password"));
-        String properties = sb.toString();
-        props.load(new StringReader(properties)) ;
-
-        return props;
+        return prop;
+    }
+    @Test
+    public void sum(){
+        int a = 5;
+        assertEquals(5,a);
     }
 }
