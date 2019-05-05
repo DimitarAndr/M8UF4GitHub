@@ -17,11 +17,27 @@ import java.util.logging.Logger;
 @WebServlet("/RegisterServlet")
 public class RegisterServlet extends HttpServlet {
 
+/*Author: Dimitar Andreev
+* Date: 05.05.2019
+* M8 - UF3 i UF4: Aplicacions web / Control de versions i documentació
+* RegisterServlet.class: Servlet for registering
+* new Clients */
+
+
     @Override
+
+    /*A method with the main logic
+     *that handles requests and responses*/
+
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response) throws ServletException, IOException {
 
+
+        /*Taking values from a properties file
+         to use them in the database connection*/
         Properties prop = PropertiesTienda.getPropertiesDDBB();
+
+
         String username = request.getParameter("username");
         String mail = request.getParameter("mail");
         String password = request.getParameter("password");
@@ -32,6 +48,7 @@ public class RegisterServlet extends HttpServlet {
         boolean mailValid = checkValidMail(mail);
         boolean passwordValid = checkValidPassword(password);
 
+        /*Adding sql connector value*/
         addClassForName();
 
         if (usernameValid && mailValid && passwordValid) {
