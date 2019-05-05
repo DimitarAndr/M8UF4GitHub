@@ -1,5 +1,6 @@
 package com.registeruser;
 
+
 import utils.constants.Constants;
 import utils.propertiestienda.PropertiesTienda;
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Logger;
+
 
 @WebServlet("/RegisterServlet")
 public class RegisterServlet extends HttpServlet {
@@ -35,10 +37,11 @@ public class RegisterServlet extends HttpServlet {
         if (usernameValid && mailValid && passwordValid) {
             boolean existUser = false;
 
-            existUser = checkUserNameDB(username, prop);
+                existUser = checkUserNameDB(username, prop);
+
             if (!existUser) {
                 try {
-                    writeInDDBB(username, mail, password, request, response);
+                    writeInDDBB(username, mail, password, request, response, prop);
                 } catch (Exception e) {
                     Logger.getLogger(Constants.ERRORBD + e);
                 }
@@ -90,15 +93,12 @@ public class RegisterServlet extends HttpServlet {
         return existUser;
     }
 
-    public void writeInDDBB(String username, String mail, String password, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void writeInDDBB(String username, String mail, String password, HttpServletRequest request, HttpServletResponse response, Properties prop) throws ServletException, IOException {
 
         String data;
-        Properties props = new Properties();
-        String url = "jdbc:mysql://localhost:3306/Tienda";
-        props.setProperty("user", "root");
-        props.setProperty("pass", "");
         String sqlQueryInsert = "insert into Usuario(username,mail,password)" + " values(?,?,?)";
-        try (Connection conn = DriverManager.getConnection(url, props); PreparedStatement preparedStmt1 = conn.prepareStatement(sqlQueryInsert)) {
+        try (Connection conn = DriverManager.getConnection(prop.getProperty("servidor.url"), prop.getProperty("servidor.usuario"),
+                prop.getProperty("servidor.password")); PreparedStatement preparedStmt1 = conn.prepareStatement(sqlQueryInsert)) {
             preparedStmt1.setString(1, username);
             preparedStmt1.setString(2, mail);
             preparedStmt1.setString(3, password);
@@ -130,7 +130,7 @@ public class RegisterServlet extends HttpServlet {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            Logger.getLogger(Constants.ERRORBD + e);
         }
     }
 

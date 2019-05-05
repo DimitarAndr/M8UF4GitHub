@@ -1,6 +1,5 @@
 package utils.propertiestienda;
 
-import org.junit.Test;
 import utils.constants.Constants;
 
 import java.io.FileInputStream;
@@ -9,18 +8,17 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.assertEquals;
 
 public class PropertiesTienda {
 
-    public PropertiesTienda() {
+    PropertiesTienda() {
     }
 
-    public static  Properties getPropertiesDDBB() {
+    public static Properties getPropertiesDDBB() {
         Properties prop = new Properties();
         InputStream is = null;
         try {
-            is = new FileInputStream("E:\\DAW2\\M8\\UF2-NEW\\src\\main\\java\\utils\\propertiestienda\\PropertiesSystem");
+            is = new FileInputStream("E:\\DAW2\\M8\\UF2-NEW\\src\\main\\resources\\PropertiesSystem");
             prop.load(is);
 
         } catch (IOException e) {
@@ -28,9 +26,5 @@ public class PropertiesTienda {
         }
         return prop;
     }
-    @Test
-    public void sum(){
-        int a = 5;
-        assertEquals(5,a);
-    }
+
 }

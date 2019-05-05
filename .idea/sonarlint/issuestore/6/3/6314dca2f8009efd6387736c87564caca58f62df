@@ -1,34 +1,0 @@
-
-{
-AWnFnIVgwn4Nbd8Zr8Bzsquid:S2095`"GUse try-with-resources or close this "Statement" in a "finally" clause.(πΧ8θόπ¬-
-‰
-AWnFnIVgwn4Nbd8Zr8B1squid:S2095‚"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(ΙΪ»Εόÿÿÿÿ8θόπ¬-
-|
-AWnFvYt11RFg2HZQQrLQsquid:S2259"BA "NullPointerException" could be thrown; "conn" is nullable here.(…¤© ÿÿÿÿÿ8‡υ­-
-]
-AWnFnIVgwn4Nbd8Zr8B8squid:S1148‹"#Use a logger to log this exception.(€ΙΤ…ύÿÿÿÿ8θόπ¬-
-b
-AWnFnIVgwn4Nbd8Zr8CEsquid:S2115")Add password protection to this database.(αΑ–ωÿÿÿÿ8θόπ¬-
-\
-AWnFnIVgwn4Nbd8Zr8B6squid:S11483"#Use a logger to log this exception.(€ΙΤ…ύÿÿÿÿ8θόπ¬-
-€
-AWnFnIVgwn4Nbd8Zr8B2squid:S2095b"GUse try-with-resources or close this "ResultSet" in a "finally" clause.(Ογωÿÿÿÿ8θόπ¬-
-\
-AWnFnIVgwn4Nbd8Zr8B7squid:S1148;"#Use a logger to log this exception.(€ΙΤ…ύÿÿÿÿ8θόπ¬-
-
-AWnGhLgjNnIe303nGhTXsquid:S00120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(ΐΆ8Θµ’΄-
-\
-AWnFnIVgwn4Nbd8Zr8B5squid:S11485"#Use a logger to log this exception.(€ΙΤ…ύÿÿÿÿ8θόπ¬-
-†
-AWnFnIVgwn4Nbd8Zr8B-squid:S3776"RRefactor this method to reduce its Cognitive Complexity from 21 to the 15 allowed.(ηΨί8θόπ¬-
-]
-AWnFnIVgwn4Nbd8Zr8B9squid:S1148‰"#Use a logger to log this exception.(€ΙΤ…ύÿÿÿÿ8θόπ¬-
-q
-AWnFxpQvFlDi_Mjh-Rwc
-squid:S106n"9Replace this use of System.out or System.err by a logger.(¨¶ΡΝώÿÿÿÿ8Έ™®-
-Dsquid:S1989?"&Add a "try/catch" block for "forward".(‹κ‚8±ΎΗ-
-Dsquid:S1989?"&Add a "try/catch" block for "forward".(‹κ‚8±ΎΗ-
-Dsquid:S1989D"&Add a "try/catch" block for "forward".(‹κ‚8±ΎΗ-
-Dsquid:S1989D"&Add a "try/catch" block for "forward".(‹κ‚8±ΎΗ-
-Dsquid:S1989I"&Add a "try/catch" block for "forward".(ΆΙΒ8±ΎΗ-
-Dsquid:S1989I"&Add a "try/catch" block for "forward".(ΆΙΒ8±ΎΗ-

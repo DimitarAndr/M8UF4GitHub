@@ -59,11 +59,7 @@ public class ShopServlet extends HttpServlet {
                 request.setAttribute("data", data);
                 request.getRequestDispatcher("rejected.jsp").forward(request, response);
             } else {
-                try {
-                    writeInDDBB(listProductos, nameClient, paymentMethod, comment, quantity, amount);
-                } catch (ClassNotFoundException e) {
-                    Logger.getLogger(Constants.ERRORBD + e);
-                }
+                writeInDDBB(listProductos, nameClient, paymentMethod, comment, quantity, amount,prop);
                 data = "You will receive your product soon";
                 request.setAttribute("data", data);
                 request.getRequestDispatcher("ShopSuccess.jsp").forward(request, response);
@@ -80,13 +76,12 @@ public class ShopServlet extends HttpServlet {
         return RegisterServlet.checkUserNameDB(nameClient, prop);
     }
 
-    private boolean writeInDDBB(String listProductos, String nameClient, String paymentMethod, String comment, String quantity, int amount) throws ClassNotFoundException {
-        String url = "jdbc:mysql://localhost:3306/Tienda";
-        Properties props = new Properties();
-        props.setProperty("user", "root");
-        props.setProperty("password", "");
+
+    private boolean writeInDDBB(String listProductos, String nameClient, String paymentMethod, String comment, String quantity, int amount,Properties prop) {
+
         String sqlQueryInsert = "insert into Compras(Nick,Products,Payment,Quantity,Amount,Comments)" + " values(?,?,?,?,?,?)";
-        try (Connection conn = DriverManager.getConnection(url, props); PreparedStatement preparedStmt1 = conn.prepareStatement(sqlQueryInsert)) {
+        try (Connection conn = DriverManager.getConnection(prop.getProperty("servidor.url"), prop.getProperty("servidor.usuario"),
+                prop.getProperty("servidor.password")); PreparedStatement preparedStmt1 = conn.prepareStatement(sqlQueryInsert)) {
             preparedStmt1.setString(1, nameClient);
             preparedStmt1.setString(2, listProductos);
             preparedStmt1.setString(3, paymentMethod);
