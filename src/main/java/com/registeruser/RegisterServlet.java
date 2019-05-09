@@ -3,6 +3,7 @@ package com.registeruser;
 
 import utils.constants.Constants;
 import utils.propertiestienda.PropertiesTienda;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,11 +18,11 @@ import java.util.logging.Logger;
 @WebServlet("/RegisterServlet")
 public class RegisterServlet extends HttpServlet {
 
-/*Author: Dimitar Andreev
-* Date: 05.05.2019
-* M8 - UF3 i UF4: Aplicacions web / Control de versions i documentació
-* RegisterServlet.class: Servlet for registering
-* new Clients */
+    /*Author: Dimitar Andreev
+     * Date: 05.05.2019
+     * M8 - UF3 i UF4: Aplicacions web / Control de versions i documentació
+     * RegisterServlet.class: Servlet for registering
+     * new Clients */
 
 
     @Override
@@ -44,6 +45,9 @@ public class RegisterServlet extends HttpServlet {
 
         Object data = null;
 
+
+        /*Methods proving if the
+         * user information is correct*/
         boolean usernameValid = checkValidUsername(username);
         boolean mailValid = checkValidMail(mail);
         boolean passwordValid = checkValidPassword(password);
@@ -54,7 +58,8 @@ public class RegisterServlet extends HttpServlet {
         if (usernameValid && mailValid && passwordValid) {
             boolean existUser = false;
 
-                existUser = checkUserNameDB(username, prop);
+            /*Checking if the user already exists in the database*/
+            existUser = checkUserNameDB(username, prop);
 
             if (!existUser) {
                 try {
@@ -83,7 +88,6 @@ public class RegisterServlet extends HttpServlet {
         }
 
     }
-
 
     public static boolean checkUserNameDB(String user, Properties prop) throws IOException {
         boolean existUser = false;
@@ -143,6 +147,7 @@ public class RegisterServlet extends HttpServlet {
         return (username.matches("[A-Za-z0-9]{1,10}"));
     }
 
+    @SuppressWarnings("squid:S1523")
     public static void addClassForName() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
